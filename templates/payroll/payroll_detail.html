@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Payroll Details</h2>
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{ payroll.employee }}</h5>
+        <p class="card-text"><strong>Pay Period:</strong> {{ payroll.pay_period_start }} to {{ payroll.pay_period_end }}</p>
+        <p class="card-text"><strong>Base Salary:</strong> ${{ payroll.base_salary }}</p>
+        <p class="card-text"><strong>Overtime Pay:</strong> ${{ payroll.overtime_pay }}</p>
+        <p class="card-text"><strong>Bonuses:</strong> ${{ payroll.bonuses }}</p>
+        <p class="card-text"><strong>Deductions:</strong> ${{ payroll.deductions }}</p>
+        <p class="card-text"><strong>Net Pay:</strong> ${{ payroll.net_pay }}</p>
+        <p class="card-text"><strong>Payment Date:</strong> {{ payroll.payment_date }}</p>
+        <p class="card-text"><strong>Status:</strong> {{ payroll.get_status_display }}</p>
+    </div>
+</div>
+
+<h3>Deductions</h3>
+<a href="{% url 'deduction_create' payroll.pk %}" class="btn btn-primary mb-3">Add Deduction</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for deduction in deductions %}
+        <tr>
+            <td>{{ deduction.name }}</td>
+            <td>${{ deduction.amount }}</td>
+            <td>
+                <a href="{% url 'deduction_update' deduction.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                <a href="{% url 'deduction_delete' deduction.pk %}" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">No deductions found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'payroll_update' payroll.pk %}" class="btn btn-warning">Edit Payroll</a>
+<a href="{% url 'payroll_delete' payroll.pk %}" class="btn btn-danger">Delete Payroll</a>
+<a href="{% url 'payroll_list' %}" class="btn btn-secondary">Back to Payroll List</a>
+{% endblock %}

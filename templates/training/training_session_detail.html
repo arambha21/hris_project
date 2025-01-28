@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ training_session.title }}</h2>
+<p><strong>Description:</strong> {{ training_session.description }}</p>
+<p><strong>Start Date:</strong> {{ training_session.start_date }}</p>
+<p><strong>End Date:</strong> {{ training_session.end_date }}</p>
+<p><strong>Location:</strong> {{ training_session.location }}</p>
+<p><strong>Trainer:</strong> {{ training_session.trainer }}</p>
+<p><strong>Max Participants:</strong> {{ training_session.max_participants }}</p>
+
+<h3>Participants</h3>
+<ul>
+    {% for participant in training_session.participants.all %}
+    <li>{{ participant.get_full_name }}</li>
+    {% empty %}
+    <li>No participants yet.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'training_session_list' %}" class="btn btn-secondary">Back to List</a>
+{% if perms.training.change_trainingsession %}
+<a href="{% url 'training_session_update' training_session.pk %}" class="btn btn-warning">Edit</a>
+{% endif %}
+{% if perms.training.delete_trainingsession %}
+<a href="{% url 'training_session_delete' training_session.pk %}" class="btn btn-danger">Delete</a>
+{% endif %}
+{% endblock %}

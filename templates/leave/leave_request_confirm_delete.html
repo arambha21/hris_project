@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Confirm Delete</h2>
+<p>Are you sure you want to delete the leave request for {{ leave_request.employee }} from {{ leave_request.start_date }} to {{ leave_request.end_date }}?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+    <a href="{% url 'leave_request_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

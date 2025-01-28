@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRIS Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7fc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .dashboard-container {
+            padding: 2rem;
+        }
+        .dashboard-header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .box {
+            background-color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .box-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .metric-box {
+            background: linear-gradient(135deg, #FF9800 0%, #FF5722 100%);
+            color: white;
+        }
+        .btn-custom {
+            border-radius: 20px;
+            padding: 0.5rem 1.5rem;
+        }
+        .disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        {% if user.is_authenticated %}
+            <div class="dashboard-header text-center">
+                <h1 class="display-4">Welcome, {{ user.get_full_name|default:user.username }}!</h1>
+                <p class="lead">Your HRIS Dashboard</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <div class="box text-center {% if not permissions.can_view_employees %}disabled{% endif %}">
+                        <i class="fas fa-users box-icon text-primary"></i>
+                        <h5>Employees</h5>
+                        <a href="{% url 'employee_list' %}" class="btn btn-primary btn-custom mt-2">View</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-lg-3">
+                    <div class="box text-center {% if not permissions.can_view_departments %}disabled{% endif %}">
+                        <i class="fas fa-building box-icon text-success"></i>
+                        <h5>Departments</h5>
+                        <a href="{% url 'department_list' %}" class="btn btn-success btn-custom mt-2">Manage</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-lg-3">
+                    <div class="box text-center {% if not permissions.can_view_leave %}disabled{% endif %}">
+                        <i class="fas fa-calendar-alt box-icon text-info"></i>
+                        <h5>Leave Requests</h5>
+                        <a href="{% url 'leave_request_list' %}" class="btn btn-info btn-custom mt-2">Check</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-lg-3">
+                    <div class="box text-center {% if not permissions.can_view_training %}disabled{% endif %}">
+                        <i class="fas fa-chalkboard-teacher box-icon text-warning"></i>
+                        <h5>Training</h5>
+                        <a href="{% url 'training_session_list' %}" class="btn btn-warning btn-custom mt-2">View</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-lg-3">
+                    <div class="box text-center {% if not permissions.can_view_performance %}disabled{% endif %}">
+                        <i class="fas fa-chart-line box-icon text-danger"></i>
+                        <h5>Performance</h5>
+                        <a href="{% url 'performance_review_list' %}" class="btn btn-danger btn-custom mt-2">Review</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-lg-3">
+                    <div class="box text-center {% if not permissions.can_view_payroll %}disabled{% endif %}">
+                        <i class="fas fa-money-check-alt box-icon text-secondary"></i>
+                        <h5>Payroll</h5>
+                        <a href="{% url 'payroll_list' %}" class="btn btn-secondary btn-custom mt-2">Manage</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-lg-3">
+                    <div class="box text-center {% if not permissions.can_view_attendance %}disabled{% endif %}">
+                        <i class="fas fa-clipboard-check box-icon text-primary"></i>
+                        <h5>Attendance</h5>
+                        <a href="{% url 'attendance_list' %}" class="btn btn-primary btn-custom mt-2">Track</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                {% if permissions.can_view_leave and pending_leave_requests is not None %}
+                <div class="col-md-4">
+                    <div class="box metric-box text-center">
+                        <h3>{{ pending_leave_requests }}</h3>
+                        <p>Pending Leave Requests</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if permissions.can_view_performance and days_until_next_review is not None %}
+                <div class="col-md-4">
+                    <div class="box metric-box text-center">
+                        <h3>{{ days_until_next_review }}</h3>
+                        <p>Days Until Next Review</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if permissions.can_view_employees and total_employees is not None %}
+                <div class="col-md-4">
+                    <div class="box metric-box text-center">
+                        <h3>{{ total_employees }}</h3>
+                        <p>Total Employees</p>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="{% url 'profile' %}" class="btn btn-outline-primary btn-custom mr-2">View Profile</a>
+                <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-custom">Logout</a>
+            </div>
+
+        {% else %}
+            <div class="dashboard-header text-center">
+                <h1 class="display-4">Welcome to HRIS</h1>
+                <p class="lead">Please log in or register to access your personalized dashboard.</p>
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg mr-3 btn-custom">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-secondary btn-lg btn-custom">Register</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

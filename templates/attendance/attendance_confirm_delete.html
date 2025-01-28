@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Confirm Attendance Record Deletion</h2>
+<p>Are you sure you want to delete the attendance record for {{ attendance.employee }} on {{ attendance.date }}?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+    <a href="{% url 'attendance_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

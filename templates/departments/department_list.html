@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Department List{% endblock %}
+{% block content %}
+    <h1>Department List</h1>
+    <a href="{% url 'department_create' %}" class="btn btn-primary mb-3">Add New Department</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Manager</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for department in departments %}
+                <tr>
+                    <td>{{ department.name }}</td>
+                    <td>{{ department.manager.user.get_full_name|default:"Not Assigned" }}</td>
+                    <td>
+                        <a href="{% url 'department_detail' department.id %}" class="btn btn-sm btn-info">View</a>
+                        <a href="{% url 'department_update' department.id %}" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{% url 'department_delete' department.id %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">No departments found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

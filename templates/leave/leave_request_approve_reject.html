@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Approve or Reject Leave Request</h2>
+<p><strong>Employee:</strong> {{ leave_request.employee }}</p>
+<p><strong>Leave Type:</strong> {{ leave_request.get_leave_type_display }}</p>
+<p><strong>Start Date:</strong> {{ leave_request.start_date }}</p>
+<p><strong>End Date:</strong> {{ leave_request.end_date }}</p>
+<p><strong>Reason:</strong> {{ leave_request.reason }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
+    <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
+    <a href="{% url 'leave_request_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

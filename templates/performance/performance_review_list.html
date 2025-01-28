@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Performance Reviews</h2>
+{% if perms.performance.add_performancereview %}
+<a href="{% url 'performance_review_create' %}" class="btn btn-primary mb-3">Create New Performance Review</a>
+{% endif %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Employee</th>
+            <th>Reviewer</th>
+            <th>Review Date</th>
+            <th>Rating</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for review in performance_reviews %}
+        <tr>
+            <td>{{ review.employee }}</td>
+            <td>{{ review.reviewer }}</td>
+            <td>{{ review.review_date }}</td>
+            <td>{{ review.get_rating_display }}</td>
+            <td>
+                <a href="{% url 'performance_review_detail' review.pk %}" class="btn btn-sm btn-info">View</a>
+                {% if perms.performance.change_performancereview %}
+                <a href="{% url 'performance_review_update' review.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                {% endif %}
+                {% if perms.performance.delete_performancereview %}
+                <a href="{% url 'performance_review_delete' review.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No performance reviews found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Attendance Records</h2>
+<a href="{% url 'attendance_create' %}" class="btn btn-primary mb-3">Add Attendance Record</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Employee</th>
+            <th>Date</th>
+            <th>Time In</th>
+            <th>Time Out</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for attendance in attendances %}
+        <tr>
+            <td>{{ attendance.employee }}</td>
+            <td>{{ attendance.date }}</td>
+            <td>{{ attendance.time_in }}</td>
+            <td>{{ attendance.time_out|default_if_none:"-" }}</td>
+            <td>{{ attendance.get_status_display }}</td>
+            <td>
+                <a href="{% url 'attendance_update' attendance.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                <a href="{% url 'attendance_delete' attendance.pk %}" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No attendance records found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

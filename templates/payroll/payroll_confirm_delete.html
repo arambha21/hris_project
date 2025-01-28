@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Confirm Payroll Deletion</h2>
+<p>Are you sure you want to delete the payroll record for {{ payroll.employee }} ({{ payroll.pay_period_start }} to {{ payroll.pay_period_end }})?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+    <a href="{% url 'payroll_detail' payroll.pk %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

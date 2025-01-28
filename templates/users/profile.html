@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+    .profile-header {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 50% 50% / 20px;
+    }
+    .profile-img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border: 5px solid white;
+        box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .btn-custom {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        border: none;
+        color: white;
+    }
+    .btn-custom:hover {
+        background: linear-gradient(135deg, #5a0fcb 0%, #1565fc 100%);
+        color: white;
+    }
+    .activity-icon {
+        font-size: 1.5rem;
+        margin-right: 10px;
+    }
+    .info-icon {
+        width: 25px;
+        text-align: center;
+        margin-right: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-header text-center">
+    <img src="{{ user.profile_picture.url|default:'https://via.placeholder.com/150' }}" alt="{{ user.username }}" class="rounded-circle profile-img mb-3">
+    <h1>{{ user.get_full_name|default:user.username }}'s Profile</h1>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Links</h5>
+                    <a href="{% url 'dashboard' %}" class="btn btn-custom btn-block mb-2">Dashboard</a>
+                    {% if user.is_staff %}
+                        <a href="{% url 'admin:index' %}" class="btn btn-custom btn-block mb-2">Admin Panel</a>
+                    {% endif %}
+                    <a href="{% url 'password_change' %}" class="btn btn-custom btn-block mb-2">Change Password</a>
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-block">Logout</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Personal Information</h5>
+                    <p><i class="fas fa-envelope info-icon"></i> {{ user.email }}</p>
+                    <p><i class="fas fa-phone info-icon"></i> {{ user.phone_number|default:"Not provided" }}</p>
+                    <p><i class="fas fa-building info-icon"></i> {{ user.department|default:"Not assigned" }}</p>
+                    <p><i class="fas fa-calendar-alt info-icon"></i> Joined: {{ user.date_joined|date:"F d, Y" }}</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Activity</h5>
+                    {% if user_activities %}
+                        {% for activity in user_activities %}
+                            <p>
+                                <i class="fas {{ activity.icon }} {{ activity.color }} activity-icon"></i>
+                                {{ activity.description }}
+                            </p>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No recent activities.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Upcoming Events</h5>
+                    {% if upcoming_events %}
+                        {% for event in upcoming_events %}
+                            <p>
+                                <i class="fas {{ event.icon }} {{ event.color }} activity-icon"></i>
+                                {{ event.description }} on {{ event.date|date:"F d, Y" }}
+                            </p>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No upcoming events.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

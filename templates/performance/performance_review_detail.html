@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Performance Review Details</h2>
+<p><strong>Employee:</strong> {{ performance_review.employee }}</p>
+<p><strong>Reviewer:</strong> {{ performance_review.reviewer }}</p>
+<p><strong>Review Date:</strong> {{ performance_review.review_date }}</p>
+<p><strong>Rating:</strong> {{ performance_review.get_rating_display }}</p>
+<p><strong>Comments:</strong> {{ performance_review.comments }}</p>
+<p><strong>Goals:</strong> {{ performance_review.goals }}</p>
+
+<a href="{% url 'performance_review_list' %}" class="btn btn-secondary">Back to List</a>
+{% if perms.performance.change_performancereview %}
+<a href="{% url 'performance_review_update' performance_review.pk %}" class="btn btn-warning">Edit</a>
+{% endif %}
+{% if perms.performance.delete_performancereview %}
+<a href="{% url 'performance_review_delete' performance_review.pk %}" class="btn btn-danger">Delete</a>
+{% endif %}
+{% endblock %}

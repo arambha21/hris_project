@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Training Sessions</h2>
+{% if perms.training.add_trainingsession %}
+<a href="{% url 'training_session_create' %}" class="btn btn-primary mb-3">Create New Training Session</a>
+{% endif %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Location</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for session in training_sessions %}
+        <tr>
+            <td>{{ session.title }}</td>
+            <td>{{ session.start_date }}</td>
+            <td>{{ session.end_date }}</td>
+            <td>{{ session.location }}</td>
+            <td>
+                <a href="{% url 'training_session_detail' session.pk %}" class="btn btn-sm btn-info">View</a>
+                {% if perms.training.change_trainingsession %}
+                <a href="{% url 'training_session_update' session.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                {% endif %}
+                {% if perms.training.delete_trainingsession %}
+                <a href="{% url 'training_session_delete' session.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No training sessions found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

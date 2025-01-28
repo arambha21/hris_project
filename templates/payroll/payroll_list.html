@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Payroll Records</h2>
+<a href="{% url 'payroll_create' %}" class="btn btn-primary mb-3">Create New Payroll Record</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Employee</th>
+            <th>Pay Period</th>
+            <th>Net Pay</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for payroll in payrolls %}
+        <tr>
+            <td>{{ payroll.employee }}</td>
+            <td>{{ payroll.pay_period_start }} - {{ payroll.pay_period_end }}</td>
+            <td>{{ payroll.net_pay }}</td>
+            <td>{{ payroll.get_status_display }}</td>
+            <td>
+                <a href="{% url 'payroll_detail' payroll.pk %}" class="btn btn-sm btn-info">View</a>
+                <a href="{% url 'payroll_update' payroll.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                <a href="{% url 'payroll_delete' payroll.pk %}" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
